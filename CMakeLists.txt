@@ -9,8 +9,8 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
 include_directories("/usr/include/eigen3")
 
 # sophus
-find_package(Sophus REQUIRED)
-include_directories(${Sophus_INCLUDE_DIRS})
+#find_package(Sophus REQUIRED)
+#include_directories(${Sophus_INCLUDE_DIRS})
 
 # g2o
 find_package(G2O REQUIRED)
@@ -29,4 +29,11 @@ target_link_libraries(kitti ${Sophus_LIBRARIES}
 add_executable(sphere src/sphere.cpp)
 set_target_properties(sphere PROPERTIES OUTPUT_NAME sphere${EXE_POSTFIX})
 target_link_libraries(sphere ${Sophus_LIBRARIES}
+    g2o_core g2o_stuff g2o_types_slam3d ${CHOLMOD_LIBRARIES})
+
+add_executable(g2oToKitti
+    src/g2otoKitti.cpp
+    src/kitticlass.cpp)
+set_target_properties(g2oToKitti PROPERTIES OUTPUT_NAME g2oToKitti${EXE_POSTFIX})
+target_link_libraries(g2oToKitti ${Sophus_LIBRARIES}
     g2o_core g2o_stuff g2o_types_slam3d ${CHOLMOD_LIBRARIES})

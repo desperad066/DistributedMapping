@@ -264,7 +264,7 @@ void Kitti::g2o_kitti(string inFilename, string outFilename)
             // SE3 顶点
             g2o::VertexSE3 *v = new g2o::VertexSE3();
             double data[7];
-            int index = 0;
+            double index = 0;
             fin >> index;
             //vertex : Id; data
             v->setId(index);
