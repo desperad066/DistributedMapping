@@ -29,6 +29,7 @@ After compilation, execute
 ```
 ./g2oToKitti -i [inputFilename(like 0.g2o)] -o [outputFilename(like 0.txt)]
 evo_traj kitti [outputFilename(like 0.txt)] -p --plot_mode=xz
+evo_traj kitti [outputFilename(like graph.txt)] --ref [outputFilename(like initial.txt)] -p --plot_mode=xz
 ```
 
 ## Data/1/
