@@ -37,3 +37,12 @@ add_executable(g2oToKitti
 set_target_properties(g2oToKitti PROPERTIES OUTPUT_NAME g2oToKitti${EXE_POSTFIX})
 target_link_libraries(g2oToKitti ${Sophus_LIBRARIES}
     g2o_core g2o_stuff g2o_types_slam3d ${CHOLMOD_LIBRARIES})
+
+add_executable(readG2OandNoise
+    src/readG2OandNoise.cpp
+    src/kitticlass.cpp)
+set_target_properties(readG2OandNoise PROPERTIES OUTPUT_NAME readG2OandNoise${EXE_POSTFIX})
+target_link_libraries(readG2OandNoise ${Sophus_LIBRARIES}
+    g2o_core g2o_stuff g2o_types_slam3d ${CHOLMOD_LIBRARIES})
+
+install(TARGETS g2oToKitti RUNTIME DESTINATION bin)

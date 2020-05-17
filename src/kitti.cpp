@@ -46,12 +46,14 @@ using namespace g2o;
 int main (int argc, char** argv)
 {
     string inputFilename;
+    string outputDirname;
     string noiseFilename = "noise";
     string optimFilename = "result";
     string kittiFilename;
     int robotNum;
     CommandArgs arg;
     arg.param("i", inputFilename, "00.txt", "input true ground filename");
+    arg.param("o", outputDirname, "result/", "output directory name");
 //    arg.param("noise", noiseFilename, "-", "after noise filename");
 //    arg.param("optim", optimFilename, "-", "after optim filename");
 //    arg.param("kitti", kittiFilename, "-", "after kitti filename");
@@ -59,19 +61,25 @@ int main (int argc, char** argv)
     arg.parseArgs(argc, argv);
 
     Kitti kitti(inputFilename);
+    int offset = 10;
     kitti.generateV_E(0, kitti.indexNum());
-    kitti.write("noise_whole.g2o");
-    kitti.optimization("noise_whole.g2o", "result_whole.g2o");
-    kitti.g2o_kitti("result_whole.g2o", "kitti_whole.txt");
+    kitti.write(outputDirname + "noise_whole.g2o");
+    kitti.optimization(outputDirname + "noise_whole.g2o", outputDirname + "result_whole.g2o");
+    kitti.g2o_kitti(outputDirname + "result_whole.g2o", outputDirname + "kitti_whole.txt");
 
     string cmd = "evo_traj kitti result_whole.txt " + inputFilename;
     for(int i = 0; i < robotNum; i++){
-        kitti.generateV_E(kitti.indexNum()*i/robotNum, kitti.indexNum()*(i+1)/robotNum);
-        noiseFilename = "noise_part_" + to_string(i) + ".g2o";
+        if(i == 0)
+            kitti.generateV_E(kitti.indexNum()*i/robotNum, kitti.indexNum()*(i+1)/robotNum + offset);
+        else if (i == robotNum-1)
+            kitti.generateV_E(kitti.indexNum()*i/robotNum - offset, kitti.indexNum()*(i+1)/robotNum + offset);
+        else
+            kitti.generateV_E(kitti.indexNum()*i/robotNum - offset, kitti.indexNum()*(i+1)/robotNum + offset);
+        noiseFilename = outputDirname + "noise_part_" + to_string(i) + ".g2o";
         kitti.write(noiseFilename);
-        optimFilename = "result_part_" + to_string(i) + ".g2o";
+        optimFilename = outputDirname + to_string(i) + ".g2o";
         kitti.optimization(noiseFilename, optimFilename);
-        kittiFilename = "kitti_part_" + to_string(i) + ".txt";
+        kittiFilename = outputDirname + "kitti_part_" + to_string(i) + ".txt";
         kitti.g2o_kitti(optimFilename, kittiFilename);
         cmd += " "+kittiFilename;
     }
