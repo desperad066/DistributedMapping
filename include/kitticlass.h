@@ -29,6 +29,7 @@ public:
     void write(string outFilename);
     void optimization(string inFilename, string outFileame);
     void g2o_kitti(string inFilename, string outFileame);
+    void readG2OandNoise(string inFilename, string outFilename);
 private:
     ifstream fileInputStream_;
     int num_;
